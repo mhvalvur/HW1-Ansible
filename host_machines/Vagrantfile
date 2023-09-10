@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "centos/7"
+
+  config.vm.define "1" do |one|
+    one.vm.hostname = "1"
+    one.vm.network "private_network", ip: "192.168.33.10"
+  end
+
+  config.vm.define "2" do |two|
+    two.vm.hostname = "2"
+    two.vm.network "private_network", ip: "192.168.33.11"
+  end
+  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+  config.vm.usable_port_range = (8000..9000)
+end
