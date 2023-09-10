@@ -1,0 +1,15 @@
+---
+- name: Deploy HTML to Port 8080
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Shut down Apache
+      service: 
+        name: httpd
+        enabled: false
+        state: stopped
+    - name: Remove Packages
+      yum:
+        name: httpd
+        state: absent

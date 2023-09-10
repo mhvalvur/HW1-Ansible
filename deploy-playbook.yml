@@ -1,0 +1,32 @@
+---
+- name: Deploy HTML to Port 8080
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Install Apache web server
+      yum:
+        name: httpd
+        state: present
+
+    - name: apache2 listen on port 8080
+      lineinfile: dest=/etc/httpd/conf/httpd.conf regexp="^Listen 80" line="Listen 8080" state=present
+      notify:
+        - Reload
+        
+    - name: Create HTML file with dynamic message
+      template:
+        src: index.html.j2
+        dest: /var/www/html/index.html
+
+    - name: Start Apache
+      service:
+        name: httpd
+        enabled: true
+        state: started
+    
+  handlers:
+    - name: Reload
+      service:
+        name: httpd
+        state: restarted
